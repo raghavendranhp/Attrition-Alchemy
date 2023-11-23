@@ -24,10 +24,23 @@ from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, f1_score,
     roc_auc_score, classification_report, confusion_matrix
 )
-from streamlit_functions_for_app import *
+
 #Ignore FutureWarnings to avoid clutter in the output
 import warnings 
 warnings.filterwarnings("ignore", category=FutureWarning)
+from pathlib import Path
+
+# Get the absolute path to the directory containing the current script
+path = Path(__file__).parent.resolve()
+
+# Add the path to sys.path if needed
+import sys
+sys.path.append(str(path))
+
+# Now you can import modules from streamlit_functions_for_app
+from streamlit_functions_for_app import *
+
+
 
 #Load the trained model and scaler
 model_rf=joblib.load(r"Models\model_rf.pkl")
