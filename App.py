@@ -24,7 +24,7 @@ from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, f1_score,
     roc_auc_score, classification_report, confusion_matrix
 )
-
+from streamlit_functions_for_app import *
 #Ignore FutureWarnings to avoid clutter in the output
 import warnings 
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -36,6 +36,8 @@ model_dtc=joblib.load(r"C:\Users\ksund\Music\project_final\Models\model_dtc.pkl"
 model_gbc=joblib.load(r"C:\Users\ksund\Music\project_final\Models\model_gbc.pkl")
 model_lg=joblib.load(r"C:\Users\ksund\Music\project_final\Models\model_lr.pkl")
 scaler = joblib.load(r"C:\Users\ksund\Music\project_final\Models\scaler.pkl")
+df_orginal=pd.read_csv(r"C:\Users\ksund\Music\project_final\Combined_attrition_data")
+df=df_orginal.copy()
 
 #Function to preprocess input data
 def preprocess_input(data):
@@ -47,12 +49,9 @@ def preprocess_input(data):
     df['MaritalStatus'] = df['MaritalStatus'].map({'Single': 3, 'Married': 2, 'Divorced': 1})
     df['BusinessTravel'] = df['BusinessTravel'].map({'Non-Travel': 1, 'Travel_Rarely': 2, 'Travel_Frequently': 3})
     df['Gender'] = label_encoder.fit_transform(df['Gender'])  # Assuming label_encoder is defined globally
-
     df = pd.get_dummies(df, columns=['Department', 'EducationField', 'JobRole'])
-
     df['Employee_Satisfaction'] = df['EnvironmentSatisfaction'] + df['JobSatisfaction'] + df['WorkLifeBalance']
     df['Employee_rating'] = df['JobInvolvement'] + df['PerformanceRating']
-
     df['Employee_risk_rating'] = df[['Over_time_Worked', 'BusinessTravel', 'Employee_rating', 'MonthlyIncome',
                                      'Employee_Satisfaction', 'JobLevel', 'StockOptionLevel', 'MaritalStatus',
                                      'TrainingTimesLastYear', 'Education']].apply(lambda x:
@@ -70,7 +69,6 @@ def preprocess_input(data):
 
     df['CombinedExperience'] = df['TotalWorkingYears'] + df['YearsAtCompany'] + df['YearsSinceLastPromotion'] + df[
         'YearsWithCurrManager']
-
     df.drop(columns=['EnvironmentSatisfaction', 'JobSatisfaction', 'WorkLifeBalance', 'JobInvolvement',
                      'PerformanceRating', 'TotalWorkingYears', 'YearsAtCompany', 'YearsSinceLastPromotion',
                      'YearsWithCurrManager'], inplace=True)
@@ -89,31 +87,31 @@ def attrition_page():
     job_involvement = st.slider("Job Involvement", 1, 4, 2)
     performance_rating = st.slider("Performance Rating", 1, 4, 2)
     over_time_worked = st.selectbox("Over Time Worked", ["Yes", "No"])
-    environment_satisfaction = st.slider("Environment Satisfaction", 1, 4, 2)
-    job_satisfaction = st.slider("Job Satisfaction", 1, 4, 2)
-    work_life_balance = st.slider("Work-Life Balance", 1, 4, 2)
+    environment_satisfaction = st.slider("Environment Satisfaction", 1.0, 4.0, 2.0)
+    job_satisfaction = st.slider("Job Satisfaction", 1.0, 4.0, 2.0)
+    work_life_balance = st.slider("Work-Life Balance", 1.0, 4.0, 2.0)
     age = st.slider("Age", 18, 60, 30)
     business_travel = st.selectbox("Business Travel", ["Non-Travel", "Travel_Rarely", "Travel_Frequently"])
     department = st.selectbox("Department", ["Research & Development", "Sales", "Human Resources"])
     distance_from_home = st.slider("Distance From Home", 1, 30, 10)
-    education = st.slider("Education", 1, 5, 3)
+    education = st.slider("Education", 1, 5, 2)
     education_field = st.selectbox("Education Field", ["Life Sciences", "Medical", "Marketing", "Technical Degree", "Other", "Human Resources"])
     gender = st.selectbox("Gender", ["Male", "Female"])
-    job_level = st.slider("Job Level", 1, 5, 3)
+    job_level = st.slider("Job Level", 1, 5, 2)
     job_role = st.selectbox("Job Role", ["Healthcare Representative", "Manufacturing Director", "Sales Representative",
                                          "Human Resources", "Manager", "Sales Executive", "Laboratory Technician",
                                          "Research Scientist", "Research Director"])
     marital_status = st.selectbox("Marital Status", ["Married", "Divorced", "Single"])
-    monthly_income = st.slider("Monthly Income", 1000, 200000, 5000)
+    monthly_income = st.slider("Monthly Income", 10000, 200000, 20000)
     num_companies_worked = st.slider("Number of Companies Worked", 0, 15, 1)
     over_18 = st.selectbox("Over 18", ["Yes"])  # Assuming Over18 column is always "Yes" in the input
-    percent_salary_hike = st.slider("Percent Salary Hike", 0, 50, 2)
+    percent_salary_hike = st.slider("Percent Salary Hike", 0, 50, 8)
     stock_option_level = st.slider("Stock Option Level", 0, 3, 1)
     total_working_years = st.slider("Total Working Years", 0.0, 30.0, 1.0)
     training_times_last_year = st.slider("Training Times Last Year", 0, 10, 1)
     years_at_company = st.slider("Years at Company", 0, 20, 2)
-    years_since_last_promotion = st.slider("Years Since Last Promotion", 0, 15, 2)
-    years_with_curr_manager = st.slider("Years with Current Manager", 0, 15, 2)
+    years_since_last_promotion = st.slider("Years Since Last Promotion", 0, 15, 1)
+    years_with_curr_manager = st.slider("Years with Current Manager", 0, 15, 1)
 
     #Create a dictionary from user inputs
     input_data = {
@@ -281,10 +279,72 @@ def about_page():
                       [GitHub-Link](https://github.com/raghavendranhp)
                         """, unsafe_allow_html=True)
        
-           
+def insight_page():
+    question_dictionary={
+'Attrition Count Analysis':1,
+'Distribution of Age':2,
+'Attrition Based on Job Level':3,
+'Attrition Count by Gender and Marital Status':4,
+'Attrition Count by Employee Stasification':5,
+'Attrition Count based on Overtime Work of Employee':6,
+'Distribution of Monthly Income':7,
+'Attrition Based on Job role':8,
+'Attrition Based on Business Travel':9,
+'Count of People Spending Years with a Manager in an Organization':10,
+'Recommendations':11}
+    #Grouping the DataFrame 'df' by 'Attrition', 'Gender', and 'MaritalStatus' and calculating the count of each group
+    gender_atr_df = df.groupby(['Attrition', 'Gender', 'MaritalStatus']).size().reset_index(name='Count')
+    #Selecting rows where 'Attrition' is 'Yes' to create a DataFrame for employees with attrition
+    gen_attrition_yes_df = gender_atr_df[gender_atr_df['Attrition'] == 'Yes']
+    #Calculate the mean MonthlyIncome for each JobRole
+    income = df.groupby(by='JobRole').MonthlyIncome.mean()
+    income_df_jobrole = pd.DataFrame(income)
+    income_df_jobrole = income_df_jobrole.sort_values(by='MonthlyIncome')
+    #Get JobRoles with Attrition 'Yes' and their counts
+    jobrole_attrition = df[df['Attrition'] == 'Yes']['JobRole']
+    jobrole_atr_value_counts = jobrole_attrition.value_counts()
+    jobrole_atr_df = pd.DataFrame(jobrole_atr_value_counts)
+
+    #Create a copy of the DataFrame
+    df1 = df.copy()
+    #Map education levels to descriptive labels
+    df1['Education'] = df1['Education'].map({5: "Doctrate", 4: "Master's", 3: "Bachelor's", 2: "College", 1: "Below_college"})
+    #Calculate the mean MonthlyIncome for each Education level
+    edu_sal = df1.groupby('Education').MonthlyIncome.mean().round()
+    edu_sal_df = pd.DataFrame(edu_sal)
+    edu_sal_df = edu_sal_df.sort_values('MonthlyIncome', ascending=False)
+    
+    questions=list(question_dictionary.keys())
+    question_option=st.selectbox(
+    'Select the Feature Analysis',
+    (questions))
+    required_function=question_dictionary[question_option]
+    if required_function==1:
+        display_attrition_count(df)
+    elif required_function==2:
+        display_age_distribution(df)
+    elif required_function==3:
+        display_job_level(df)
+    elif required_function==4:
+        display_gender_maritalstatus_attrition(gen_attrition_yes_df)
+    elif required_function==5:
+        display_employee_satsification(df)
+    elif required_function==6:
+        display_overtime_worked(df)
+    elif required_function==7:
+        display_attrition_monthly_income(df)
+    elif required_function==8:
+        display_jobrole_attrition(jobrole_atr_df)
+    elif required_function==9:
+        display_business_travel(df)
+    elif required_function==10:
+        display_years_with_currmanager(df)
+    elif required_function==11:
+        display_recommendations()
+
 
 def main():
-    st.set_page_config(page_title="Attrition Alchemy | By Raghavendran",layout="wide")
+    st.set_page_config(page_title="Attrition Alchemy | By Raghavendran",layout="wide",page_icon="🧊")
     selected = option_menu('',["About","App","Explore"],
                            icons=["house","graph-up-arrow","bar-chart-line"],
                            menu_icon="menu-button-wide",
@@ -304,6 +364,7 @@ def main():
     #Insights Page
     elif selected == "Explore":
         st.header(":violet[**Employee Attrition -Insights**]")
+        insight_page()
 
 #Run the Streamlit app
 if __name__ == "__main__":
