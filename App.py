@@ -30,13 +30,13 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 #Load the trained model and scaler
-model_rf=joblib.load(r"C:\Users\ksund\Music\project_final\Models\model_rf.pkl")
-model_svc=joblib.load(r"C:\Users\ksund\Music\project_final\Models\model_svc.pkl")
-model_dtc=joblib.load(r"C:\Users\ksund\Music\project_final\Models\model_dtc.pkl")
-model_gbc=joblib.load(r"C:\Users\ksund\Music\project_final\Models\model_gbc.pkl")
-model_lg=joblib.load(r"C:\Users\ksund\Music\project_final\Models\model_lr.pkl")
-scaler = joblib.load(r"C:\Users\ksund\Music\project_final\Models\scaler.pkl")
-df_orginal=pd.read_csv(r"C:\Users\ksund\Music\project_final\Combined_attrition_data")
+model_rf=joblib.load(r"Models\model_rf.pkl")
+model_svc=joblib.load(r"Models\model_svc.pkl")
+model_dtc=joblib.load(r"Models\model_dtc.pkl")
+model_gbc=joblib.load(r"Models\model_gbc.pkl")
+model_lg=joblib.load(r"Models\model_lr.pkl")
+scaler = joblib.load(r"Models\scaler.pkl")
+df_orginal=pd.read_csv(r"Datas\Combined_attrition_data")
 df=df_orginal.copy()
 
 #Function to preprocess input data
