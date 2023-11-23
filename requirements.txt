@@ -1,4 +1,13 @@
+Python-IO
+regex
+Pillow
+click==8.0.4
+colorama==0.4.6
+decorator==5.1.1
+Jinja2==3.1.2
 dash==2.13.0
+gitdb==4.0.10
+GitPython==3.1.30
 dash-core-components==2.0.0
 dash-html-components==2.0.0
 dash-table==5.0.0
