@@ -43,13 +43,13 @@ from streamlit_functions_for_app import *
 
 
 #Load the trained model and scaler
-model_rf=joblib.load(r"Models\model_rf.pkl")
-model_svc=joblib.load(r"Models\model_svc.pkl")
-model_dtc=joblib.load(r"Models\model_dtc.pkl")
-model_gbc=joblib.load(r"Models\model_gbc.pkl")
-model_lg=joblib.load(r"Models\model_lr.pkl")
-scaler = joblib.load(r"Models\scaler.pkl")
-df_orginal=pd.read_csv(r"Datas\Combined_attrition_data")
+model_rf=joblib.load("Models/model_rf.pkl")
+model_svc=joblib.load("Models/model_svc.pkl")
+model_dtc=joblib.load("Models/model_dtc.pkl")
+model_gbc=joblib.load("Models/model_gbc.pkl")
+model_lg=joblib.load("Models/model_lr.pkl")
+scaler = joblib.load("Models/scaler.pkl")
+df_orginal=pd.read_csv("Datas/Combined_attrition_data")
 df=df_orginal.copy()
 
 #Function to preprocess input data
