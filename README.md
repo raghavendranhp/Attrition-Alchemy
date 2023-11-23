@@ -50,6 +50,10 @@ The project utilized internal company data, including employee profiles, job sat
 
    ```bash
    git clone https://github.com/raghavendranhp/Attrition-Alchemy.git
+2.Install the required Python packages
+### Deployment (Using Streamlit Cloud)
+3.Deploy the Streamlit app on Streamlit Cloud by using the Streamlit CLI.  
+4.Access the deployed application--[open app](https://attrition-alchemy-raghavendran.streamlit.app/)
 
 ## Usage
 - Execute the Jupyter notebooks in the notebooks directory in sequential order.
@@ -84,6 +88,9 @@ Contributions are welcome! For major changes, please open an issue first to disc
 
 ## License  
 This project is licensed under the MIT License.
+
+## App URL
+Open Application:[https://attrition-alchemy-raghavendran.streamlit.app/](https://attrition-alchemy-raghavendran.streamlit.app/)
 
 ## Author
 Raghavendran S,  
